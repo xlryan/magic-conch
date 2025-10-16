@@ -1,0 +1,48 @@
+name: "🐞 Bug Report | 问题反馈"
+description: "反馈缺陷或异常行为。Report a bug or unexpected behavior."
+title: "Bug: "
+labels:
+  - "type:bug"
+  - "status:triage"
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "描述 | Description"
+      description: "简要说明发生了什么。What happened?"
+      placeholder: "当我...\nI expected..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "复现步骤 | Steps to Reproduce"
+      description: "列出清晰步骤，确保他人可复现。Provide clear reproduction steps."
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "预期结果 | Expected Behavior"
+      description: "告诉我们正确的行为应该是什么。"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: "实际结果 | Actual Behavior"
+      description: "实际发生了什么？What did you observe?"
+  - type: textarea
+    id: context
+    attributes:
+      label: "上下文 | Additional Context"
+      description: "包含日志、截图、环境信息。Include logs, screenshots, env info."
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "确认 Checklist"
+      options:
+        - label: "我已阅读《SECURITY.md》，此问题不涉及安全漏洞。I confirm this is not a security issue."
+          required: true
+        - label: "已运行 `scripts/check.sh`（如适用）。Ran `scripts/check.sh` if applicable."

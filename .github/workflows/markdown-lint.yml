@@ -1,0 +1,27 @@
+name: Markdown Lint
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.md"
+  pull_request:
+    paths:
+      - "**/*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install markdownlint-cli
+        run: npm install --global markdownlint-cli@0.37.0
+        shell: bash
+      - name: Run markdownlint
+        run: markdownlint "**/*.md" --ignore "node_modules"
+        shell: bash

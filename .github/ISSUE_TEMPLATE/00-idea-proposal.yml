@@ -1,0 +1,67 @@
+name: "🌱 Idea Proposal | 创意提交"
+description: "提交新的创意卡片，进入神奇海螺的 Idea 池。Propose a new idea for incubation."
+title: "Idea: "
+labels:
+  - "type:idea"
+  - "status:triage"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投递创意！请保留双语提示，提交后可以删除多余说明。  
+        Thanks for sharing! You may prune instructions before submitting.
+  - type: input
+    id: summary
+    attributes:
+      label: "一句话概述 | One-liner"
+      description: "你想解决什么问题？What problem are you solving?"
+      placeholder: "例：自动调节节奏的智能节拍器 / Adaptive-tempo smart metronome"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "问题陈述 | Problem Statement"
+      description: "谁在受影响？痛点是什么？Who is impacted and what's the pain?"
+      placeholder: "- 学生练琴节奏不稳...\n- Remote musicians..."
+    validations:
+      required: true
+  - type: textarea
+    id: insight
+    attributes:
+      label: "核心洞察 | Key Insight"
+      description: "触发灵感的观察或数据。Observation or data behind the idea."
+  - type: textarea
+    id: solution
+    attributes:
+      label: "初步方案 | Sketch Solution"
+      description: "描述可能的解决方案或体验草图。Outline your solution sketch."
+  - type: textarea
+    id: feasibility
+    attributes:
+      label: "技术可行性 | Feasibility"
+      description: "有哪些技术依赖或需要探索的部分？List tech dependencies or unknowns."
+  - type: textarea
+    id: metrics
+    attributes:
+      label: "成功指标 | Success Metrics"
+      description: "我们如何判断实验成功？How do we measure success?"
+  - type: textarea
+    id: risks
+    attributes:
+      label: "风险与反例 | Risks & Counterpoints"
+      description: "列出潜在风险、替代方案或失败可能。"
+  - type: textarea
+    id: collaborators
+    attributes:
+      label: "协作者需求 | Collaborators Needed"
+      description: "需要哪些技能？有什么志愿者？What skills/volunteers are needed?"
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "提交前检查 | Submission Checklist"
+      options:
+        - label: "我已阅读并同意《CODE_OF_CONDUCT.md》 / I agree to the Code of Conduct."
+          required: true
+        - label: "我已运行 `scripts/check.sh`（若提交包含文件变更） / Ran `scripts/check.sh` if files were changed."
+        - label: "我理解此创意将公开讨论 / I understand the idea will be discussed publicly."

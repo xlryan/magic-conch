@@ -1,0 +1,34 @@
+name: Mark stale issues
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 30
+          days-before-close: 7
+          stale-issue-label: "status:stale"
+          exempt-issue-labels: "type:idea"
+          stale-pr-label: "status:stale"
+          stale-issue-message: >
+            👋 这条 Issue 已 30 天无活动，标记为 stale。请在 7 天内更新，否则将自动关闭。
+            This issue has been marked stale after 30 days of inactivity. Please update within 7 days.
+          close-issue-message: >
+            ⏳ 因长时间无更新，Issue 已关闭。如需继续，请重新开启或提交新 Issue。
+            Closing due to inactivity. Reopen or file a new issue to continue.
+          stale-pr-message: >
+            👋 该 PR 已 30 天无更新。请确认是否继续推进，或在 7 天内补充说明。
+            This PR has been inactive for 30 days. Please update or it will close in 7 days.
+          close-pr-message: >
+            ⏳ PR 因长时间无更新已关闭。感谢贡献，随时欢迎重新打开。
+            Closing this PR for inactivity. Thank you, feel free to reopen anytime.
