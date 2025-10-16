@@ -1,0 +1,41 @@
+id: sample-quaver
+title: "Quaver 多端重构：声波未到，需求先炸"
+owner: "浮夸节拍工作室 / Exaggerated Beat Studio"
+license: CC-BY-SA-4.0
+repo_url: https://example.com/quaver
+period:
+  start: "2021-02"
+  end: "2022-06"
+last_commit: "2022-05-18"
+why_failed:
+  - 一口气要做 Web + 桌面 + 移动，范围膨胀到没完没了
+  - 产品负责人每周改 KPI，连主旋律都换了三次
+  - 音频依赖链条落在 Electron 古老版本上，升级必崩
+score:
+  self: 78
+  reviewer: 82
+  total: 84
+comeback_potential: 4
+lessons:
+  - 分阶段验收比一锅端上线更靠谱，先锁一个终端成功再扩散
+  - 音频栈升级要有时间缓冲，别在大版本卡点玩命加班
+  - KPI 频繁改动必须经治理流程确认，减少无效回转
+funny_bits:
+  - 需求文档里写着「像海浪一样顺滑的侧栏」却没人懂怎么测
+  - 内部群的口号是「ALL PLATFORM OR NOTHING」，直到真的 Nothing
+screenshots:
+  - title: 崩溃的迭代计划
+    path: graveyard/assets/sample-quaver/roadmap.png
+    caption: 甘特图被拉成日历桌布
+  - title: UI 设计稿堆叠
+    path: graveyard/assets/sample-quaver/ui-stack.png
+    caption: 同时存在 5 套冲突的样式
+tags:
+  - scope-creep
+  - audio
+  - electron
+consent:
+  confirmed: true
+  contact: quaver-museum@example.com
+status: abandoned
+sample: true

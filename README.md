@@ -1,74 +1,94 @@
-# 神奇海螺 Magic Conch
+# Magic Conch – Museum of Unfinished 神奇海螺·烂尾博物馆
 
-![CI](https://github.com/your-username/magic-conch/actions/workflows/ci.yml/badge.svg)
-![Markdown Lint](https://github.com/your-username/magic-conch/actions/workflows/markdown-lint.yml/badge.svg)
-![Stale](https://github.com/your-username/magic-conch/actions/workflows/stale.yml/badge.svg)
+![Graveyard Leaderboard](https://img.shields.io/badge/Graveyard-Top%2010%20Pending-8f14e45f?logo=github&labelColor=232323&color=ff5d73)
+![Opt-In Ethics](https://img.shields.io/badge/Consented-Yes-44cc11)
 
-> 小步快跑、先丢草稿——我们相信频繁对话胜过完美计划。  
-> Ship tiny, ship often—we value real conversations over perfect plans.
+> 🐚 "神奇海螺，有个项目烂尾了怎么办？" —— "把它好好写进博物馆。"  
+> We celebrate unfinished business with kindness, humor, and useful retros.
 
-## 愿景 Vision
-- 打造一个开放的创意沙盒，把「想法 → 原型 → 小项目」的路径走得更短。  
-  Co-create an open sandbox where ideas leap into prototypes and micro-projects faster.
-- 通过社区共创验证创意可行性，沉淀可复用的工具与流程。  
-  Validate feasibility through community co-creation and leave reusable playbooks behind.
+## 项目定位 Project Focus
+- 收集个人或授权团队的**烂尾 / 搁置项目复盘**，像逛展一样读懂失败背后的条件反射。  
+  A curated hall of famously unfinished experiments, with respectful post-mortems.
+- 用幽默但不尖刻的角度记录“失败档案”，帮助后来人少踩雷。  
+  Laugh with—not at—the mess, so the next crew avoids repeating it.
+- 由投稿者提供自述，社区 reviewer 协助校准评分与伦理审查。  
+  Authors self-report; reviewers calibrate scores and check ethics.
 
-## 为什么叫“神奇海螺”？Why "Magic Conch"?
-- 灵感来自《海绵宝宝》中可以倾听任何问题的海螺——我们鼓励大胆发问与回应。  
-  Inspired by the shell from SpongeBob that invites every question and answer.
-- 每一次呼唤都可能唤醒新的灵感火花；我们希望保留那份好奇与幽默。  
-  Every call might spark new ideas; we want to keep curiosity and humor alive.
+## 如何投稿 Submission Walkthrough
+1. Fork 本仓库，创建分支。Fork the repo and branch out.
+2. 新建 `graveyard/entries/<slug>.yml`（按 schema 填写），资源请放进 `graveyard/assets/<slug>/`。  
+   Add your YAML entry per schema and stash sanitized assets alongside it.
+3. 在 PR 中附带预览（可运行 `python scripts/generate_leaderboard.py`），并勾选投稿 Issue 模板。  
+   Run the leaderboard script locally before opening the PR.
+4. Reviewer 会执行 `validate-entry` 工作流：校验 JSON Schema、检查敏感词、对齐评分。  
+   The workflow enforces schema, linting, and basic redaction checks.
+5. 通过后，你的项目将出现在排行榜与徽章页；若复活进展，请更新评分或改标记为 “复活中”。
 
-## 如何参与 How to Participate
-1. 浏览 `ideas/` 与 Discussions，评论或点赞你感兴趣的创意。  
-   Browse `ideas/` and Discussions; react to the ideas that excite you.
-2. 使用 `ideas/_template.md` 在 Issue 或 PR 中提交新创意。  
-   Submit new ideas via Issues/PRs using `ideas/_template.md`.
-3. 加入每周评审会，一起筛选进入 `proposals/` 的候选项目。  
-   Join weekly reviews to elevate ideas into `proposals/`.
-4. 当提案被采纳时，协作维护 `projects/` 的项目主档并认领任务。  
-   Once greenlit, help maintain `projects/` dossiers and pick up tasks.
+更多细节与行为准则：请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 与 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
 
-## 快速上手 Quickstart
-- 克隆仓库：`git clone git@github.com:your-username/magic-conch.git`  
-  Clone the repo: `git clone git@github.com:your-username/magic-conch.git`.
-- 初始化工具：`scripts/setup.sh` 将安装 lint 工具并生成基础 hooks。  
-  Run `scripts/setup.sh` to install lint tooling and bootstrap hooks.
-- 本地自查：`scripts/check.sh` 汇总 Markdown 链接、拼写与 YAML 校验。  
-  Use `scripts/check.sh` for Markdown links, spell, and YAML checks in one go.
-- 参考 `docs/STYLEGUIDE.md` 确认写作与代码风格。  
-  Review `docs/STYLEGUIDE.md` for writing and code style.
+## 评分摘要 Scoring TL;DR (0–100，越高越烂)
+| 项目坑点 | 分值 | 英文提示 |
+| --- | --- | --- |
+| Scope Creep 过度 | 25 | Scope creep overload |
+| 目标漂移 / 需求反复 | 20 | Pivot mania |
+| 技术债化石（依赖地狱） | 15 | Fossilized tech debt |
+| 文档破产（知识只在脑中） | 10 | Docs bankruptcy |
+| 单点风险（Bus Factor = 1） | 10 | Single point of failure |
+| 资金 / 精力蒸发 | 10 | Burnout or funding void |
+| 喜剧效果（梗图 / 梗命名） | 10 | Comedy factor |
+| 回春潜力抵扣 | −10 | Comeback potential offset |
 
-## 流程 Flow: Idea → Proposal → Project
-- **Idea 收集 Collect**：任何人都可以用模板发起创意，讨论重点是痛点、受众与可行性。  
-  Anyone may submit; focus on pain points, audience, feasibility.
-- **Proposal 评审 Review**：由 Maintainer/Reviewer 每周评估，明确范围、里程碑与资源。  
-  Maintainers/Reviewers scope, prioritize, and schedule weekly.
-- **Project 落地 Execute**：成立最小工作小组，维护主档、任务看板与版本发布。  
-  Spin up a squad to maintain the project dossier, board, and release cadence.
-- **复盘 Learn**：每次发布后在 ADR/复盘中记录经验。  
-  Capture learnings post-release via ADRs and retrospectives.
+> **总分 = Σ(正向项) – 回春潜力**，上限 100，下限 0。投稿者自评，Reviewer 校准；两者并列展示。
 
-## 标签策略 Label Legend
-- `type:idea`：创意卡片 / Idea intake  
-- `status:triage`：等待优先级评审 / Needs triage  
-- `good-first-issue`：适合首次贡献者 / Friendly for first-time contributors  
-- `help-wanted`：需要协作者 / Help requested  
-- `area:frontend|backend|infra|docs`：关注领域 / Domain focus  
-- `priority:p1|p2|p3`：优先级 / Priority levels  
-- 更多标签请参考 `.github/labels.yml`。  
-  See `.github/labels.yml` for the full legend.
+## 伦理与授权 Ethics & Consent
+- 仅收录投稿者本人拥有版权或已获明确授权的项目。  
+  Submit only what you have rights to share.
+- 必须脱敏：密钥、隐私数据、公司机密请删除或匿名化。  
+  Redact secrets, personal info, and corporate IP.
+- 尊重所有贡献者署名与许可证，不以羞辱为目的。  
+  Credit collaborators and avoid punch-down humor.
+- 可随时将“烂尾”条目更新为“复活中”，保留历史评分便于对照。  
+  You may flip status to "resurrecting" while keeping historical scores.
 
-## 项目状态 Status
-- 当前阶段：孵化中（Incubation）  
-  Current stage: Incubation.
-- 默认分支：`main`（语义化版本 `v0.y.z` 起步）  
-  Default branch: `main` with lightweight SemVer starting at `v0.y.z`.
+## 排行榜 Top 10 Graveyards
+排行榜由脚本自动生成，含回春抵扣提醒。若手动修改，本地脚本会覆盖。
 
-## 讨论与支持 Discussions & Support
-- Issue 列表：<https://github.com/your-username/magic-conch/issues>  
-  Issues: <https://github.com/your-username/magic-conch/issues>.
-- 讨论区（Ideas/Q&A）：<https://github.com/your-username/magic-conch/discussions>  
-  Discussions (Ideas & Q&A): <https://github.com/your-username/magic-conch/discussions>.
-- 行为准则违规请邮件至 `conduct@magic-conch.dev`。  
-  Report conduct concerns via `conduct@magic-conch.dev`.
+<!-- LEADERBOARD:START -->
+| 排名 | 项目 | 自评 / Reviewer | 总分 (越烂越高) | 回春潜力 | 标签 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | **DataLens 元数据放大镜：设计开到宇宙但忘了起步 (Sample)**<br/><small>洞察未遂研究所 / Insight Almost Works</small><br/><code>abandoned</code> | 88 / 91 | 94 | 2/10 | data-platform, metadata, access-control |
+| 2 | **Quaver 多端重构：声波未到，需求先炸 (Sample)**<br/><small>浮夸节拍工作室 / Exaggerated Beat Studio</small><br/><code>abandoned</code> | 78 / 82 | 84 | 4/10 | scope-creep, audio, electron |
+<!-- LEADERBOARD:END -->
+
+## 从烂尾到复活 Comeback Corner
+- `comeback_potential` 字段越高，回春抵扣越大，排行榜会展示原始坑点与潜在转机。  
+  Higher comeback scores mean stronger revival chances and lower total.
+- 可在 `graveyard/entries/<slug>.yml` 中补充复活计划、资源、看板链接。  
+  Add revival plans, resources, or project boards as you reboot.
+- 欢迎把条目迁移到独立的“复活追踪”文档，并在 README 中分享救赎故事。  
+  Graduated stories are welcome—tell us how you brought it back.
+
+## 自动化工具链 Automation
+- `scripts/generate_leaderboard.py`：解析所有条目，更新 README Top 10 与 `badges/README-badges.md`。  
+  Keeps leaderboards and badges fresh.
+- `.github/workflows/validate-entry.yml`：每次 PR 校验条目结构、分值范围与敏感词。  
+  Validates schema, field completeness, and redaction hints.
+- `.github/workflows/leaderboard.yml`：合并后自动重跑脚本并提交排行榜更新。  
+  Auto-regenerates leaderboard post-merge using `GITHUB_TOKEN`.
+
+## 看板与社区 Boards & Community
+- 建议将 GitHub Projects 设为「复活追踪」看板，挂接 `type:grave` 与 `comeback?` 标签。  
+  Spin up a GitHub Project view filtered by the graveyard labels.
+- 标签速览： `type:grave`、`status:triage`、`needs:schema-fix`、`ethics:check`、`comeback?`。  
+  Check `.github/labels.yml` for full label docs.
+- 讨论区保留原有节奏：欢迎用幽默又负责任的方式分享经验。  
+  Humor is welcome; malice is not.
+
+## 延伸阅读 More Docs
+- [CONTRIBUTING.md](CONTRIBUTING.md) – 投稿与评审流程
+- [GOVERNANCE.md](GOVERNANCE.md) – 治理 / Governance model
+- [SECURITY.md](SECURITY.md) – 安全报告渠道
+- [VISION.md](VISION.md) & [ROADMAP.md](ROADMAP.md) – 原始愿景与演进纪要
+
+欢迎来到神奇海螺的烂尾博物馆，愿你的翻车故事照亮别人的夜航灯。  
+May every stalled dream become someone else's lighthouse.

@@ -1,0 +1,74 @@
+name: "提交烂尾档案 / Submit Graveyard Entry"
+description: "Fork → 撰写 graveyard/entries/<slug>.yml → 创建 PR 前的投稿登记"
+title: "[Graveyard] 项目名"
+labels:
+  - "type:grave"
+  - "status:triage"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你把一个烂尾故事带进博物馆！
+        请先完成以下步骤：
+        1. Fork 仓库并创建分支。
+        2. 新建 `graveyard/entries/<slug>.yml`，按照 [graveyard/schema.md](../../graveyard/schema.md) 填写。
+        3. 将相关截图或附件放在 `graveyard/assets/<slug>/` 并确保无敏感信息。
+        4. 本地运行 `python scripts/generate_leaderboard.py`，确认 README 与徽章更新无误。
+        5. 准备好与 reviewer 协作校准分数与伦理项。
+  - type: input
+    id: slug
+    attributes:
+      label: 条目 ID（slug）
+      description: 应与文件名 `graveyard/entries/<slug>.yml` 保持一致。
+      placeholder: "例如：sample-quaver"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: 烂尾概览
+      description: 用 2-3 句描述项目的目标、为何停摆，以及主要教训。
+      placeholder: "本项目想达成什么？为何失败？后来呢？"
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: 原仓库或档案链接
+      placeholder: "https://"
+    validations:
+      required: true
+  - type: input
+    id: score-self
+    attributes:
+      label: 投稿者自评总分
+      description: 0–100 之间的整数。
+      placeholder: "84"
+    validations:
+      required: true
+  - type: input
+    id: score-reviewer
+    attributes:
+      label: Reviewer 校准分（如已存在）
+      placeholder: "可留空，待评审补充"
+    validations:
+      required: false
+  - type: textarea
+    id: ethics
+    attributes:
+      label: 伦理与脱敏确认
+      description: 请说明你已经移除敏感信息，并确认拥有内容权利。
+      placeholder: "我已脱敏，并确认拥有或获得授权分享此项目。"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已阅读并遵守仓库的 [行为准则](../../CODE_OF_CONDUCT.md)
+          required: true
+        - label: 我已经运行 `python scripts/generate_leaderboard.py`
+          required: true
+        - label: 我愿意与 reviewer 讨论分数与公开范围
+          required: true

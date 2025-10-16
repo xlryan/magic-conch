@@ -1,0 +1,41 @@
+id: sample-datalens
+title: "DataLens 元数据放大镜：设计开到宇宙但忘了起步"
+owner: "洞察未遂研究所 / Insight Almost Works"
+license: CC-BY-4.0
+repo_url: https://example.com/datalens
+period:
+  start: "2019-09"
+  end: "2021-01"
+last_commit: "2020-12-11"
+why_failed:
+  - 权限模型设计到 7 层嵌套，开发者需要博士论文才能维护
+  - 元数据采集策略没定稿，爬虫和 ETL 工具互相等待
+  - 文档全部口头传递，关键脚本只存在某位同事的外接硬盘
+score:
+  self: 88
+  reviewer: 91
+  total: 94
+comeback_potential: 2
+lessons:
+  - 模块化权限先交付 MVP，避免把所有角色情景一次写完
+  - 采集策略要先定核心「可验证指标」，再扩展精细字段
+  - 运维脚本必须纳入版本控制，否则交接就是灾难片
+funny_bits:
+  - 我们真的画了“宇宙权限结构图”贴在茶水间
+  - 项目代号叫“夜视镜”，因为大家只能加班调试
+screenshots:
+  - title: 权限宇宙图
+    path: graveyard/assets/sample-datalens/auth-galaxy.png
+    caption: 7 层节点拼成的银河系
+  - title: 元数据流程草稿
+    path: graveyard/assets/sample-datalens/etl-draft.png
+    caption: 箭头循环三次的 PPT 神图
+tags:
+  - data-platform
+  - metadata
+  - access-control
+consent:
+  confirmed: true
+  contact: datalens-museum@example.com
+status: abandoned
+sample: true
