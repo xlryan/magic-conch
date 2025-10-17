@@ -39,6 +39,29 @@ bash deploy.sh
 
 详细部署文档：[DEPLOY.md](./DEPLOY.md)
 
+### Nginx 反向代理配置
+
+生产环境推荐使用 Nginx 作为反向代理：
+
+```bash
+# 1. 安装 Nginx
+sudo apt install nginx -y
+
+# 2. 复制配置文件
+sudo cp nginx.conf /etc/nginx/sites-available/magic-conch
+sudo ln -s /etc/nginx/sites-available/magic-conch /etc/nginx/sites-enabled/
+
+# 3. 配置 SSL（Let's Encrypt）
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d conch.lesstk.com
+
+# 4. 重启 Nginx
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+**详细配置指南**：[NGINX_SETUP.md](./NGINX_SETUP.md)
+
 ### GitHub Webhook 自动部署（推荐）
 
 通过 Webhook 实现安全的自动部署，适合开源项目：
