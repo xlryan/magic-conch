@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# 检查是否使用 bash 执行
+if [ -z "$BASH_VERSION" ]; then
+    echo "❌ 错误：请使用 bash 执行此脚本"
+    echo "   正确命令: bash deploy.sh"
+    exit 1
+fi
+
 echo "🚀 神奇海螺 · 烂尾博物馆 - 生产环境一键部署"
 echo "================================================"
 
