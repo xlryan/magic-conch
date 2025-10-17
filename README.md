@@ -39,6 +39,27 @@ bash deploy.sh
 
 详细部署文档：[DEPLOY.md](./DEPLOY.md)
 
+### GitHub Actions 自动部署
+
+配置后每次 push 到 main 分支自动部署：
+
+```bash
+# 1. 服务器运行权限配置脚本
+bash setup-ci-permissions.sh
+
+# 2. 配置 GitHub Secrets（见下文）
+# 3. Push 代码到 main 分支，自动部署！
+```
+
+配置指南：[.github/DEPLOY_SETUP.md](./.github/DEPLOY_SETUP.md)
+
+**必需的 GitHub Secrets：**
+- `SERVER_HOST` - 服务器 IP
+- `SERVER_USER` - SSH 用户名
+- `SERVER_SSH_KEY` - SSH 私钥
+- `SERVER_PORT` - SSH 端口（可选，默认 22）
+- `PROJECT_PATH` - 项目路径（可选，默认 ~/magic-conch）
+
 ### 访问应用
 
 - 主页：`http://localhost:8000`
