@@ -49,7 +49,7 @@ echo "WEBHOOK_SECRET=$(openssl rand -hex 32)" >> .env
 
 # 2. 在 GitHub 仓库配置 Webhook
 # Settings → Webhooks → Add webhook
-# Payload URL: http://your-server:8000/api/webhook/deploy
+# Payload URL: https://conch.lesstk.com/api/webhook/deploy
 # Secret: 与上面生成的 WEBHOOK_SECRET 一致
 
 # 3. 配置 sudo 权限（一次性）

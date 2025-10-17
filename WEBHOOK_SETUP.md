@@ -58,7 +58,7 @@ sudo visudo
 
 添加以下内容（替换 `your_username` 为实际用户名）：
 
-```
+```sudoers
 your_username ALL=(ALL) NOPASSWD: /bin/systemctl restart magic-conch
 your_username ALL=(ALL) NOPASSWD: /bin/systemctl status magic-conch
 your_username ALL=(ALL) NOPASSWD: /bin/systemctl is-active magic-conch
@@ -103,7 +103,7 @@ sudo systemctl restart magic-conch
 
 | 字段 | 值 | 说明 |
 |------|-----|------|
-| **Payload URL** | `http://your-server-ip:8000/api/webhook/deploy` | 替换为你的服务器地址 |
+| **Payload URL** | `https://conch.lesstk.com/api/webhook/deploy` | 服务器 Webhook 地址 |
 | **Content type** | `application/json` | 必须选择 JSON 格式 |
 | **Secret** | 粘贴之前生成的 Webhook Secret | 与 `.env` 中的 `WEBHOOK_SECRET` 一致 |
 | **Which events** | 选择 `Just the push event` | 只监听 push 事件 |
@@ -262,8 +262,8 @@ sudo journalctl -u magic-conch -n 100 --no-pager
 
 生产环境建议配置 SSL 证书，使用 HTTPS：
 
-```
-https://your-domain.com/api/webhook/deploy
+```text
+https://conch.lesstk.com/api/webhook/deploy
 ```
 
 **推荐工具**：
@@ -275,7 +275,7 @@ https://your-domain.com/api/webhook/deploy
 
 只允许 GitHub IP 访问 webhook 端点：
 
-**GitHub Webhook IP 范围**：https://api.github.com/meta
+**GitHub Webhook IP 范围**：<https://api.github.com/meta>
 
 **Nginx 配置示例**：
 ```nginx
@@ -351,57 +351,23 @@ tail -f /var/log/syslog | grep webhook
 
 ## 🎯 完整部署流程图
 
-```
-┌─────────────────┐
-│  开发者 Push 代码  │
-│   到 main 分支    │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ GitHub 发送      │
-│ Webhook 请求     │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ 服务器验证签名    │
-│ (HMAC-SHA256)   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ 检查分支是否为    │
-│   main 分支      │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ 执行部署脚本      │
-│ scripts/deploy.sh│
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ 1. git pull     │
-│ 2. pip install  │
-│ 3. 数据库迁移    │
-│ 4. 重启服务      │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  部署完成 ✅     │
-│ 返回结果到 GitHub│
-└─────────────────┘
+```mermaid
+graph TD
+    A[开发者 Push 代码到 main 分支] --> B[GitHub 发送 Webhook 请求]
+    B --> C[服务器验证签名 HMAC-SHA256]
+    C --> D{检查分支是否为 main?}
+    D -->|是| E[执行部署脚本 scripts/deploy.sh]
+    D -->|否| F[忽略请求]
+    E --> G[1. git pull<br/>2. pip install<br/>3. 数据库迁移<br/>4. 重启服务]
+    G --> H[部署完成 ✅<br/>返回结果到 GitHub]
 ```
 
 ---
 
 ## 📞 获取帮助
 
-- GitHub Webhooks 文档: https://docs.github.com/webhooks
-- 项目 Issues: https://github.com/xlryan/magic-conch/issues
+- GitHub Webhooks 文档: <https://docs.github.com/webhooks>
+- 项目 Issues: <https://github.com/xlryan/magic-conch/issues>
 
 ---
 
