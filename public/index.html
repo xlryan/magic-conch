@@ -4,36 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>神奇海螺 · 烂尾博物馆</title>
+    <meta name="description" content="以温柔的方式记录开发者的创作历程，烂尾不可怕，可怕的是不敢开始">
     <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <h1 class="title">🐚 神奇海螺 · 烂尾博物馆</h1>
-            <p class="subtitle">以温柔的方式纪念那些未完成的梦想</p>
+            <p class="subtitle">以温柔的方式记录未完成的梦想</p>
         </div>
     </header>
 
-    <main class="container main-content">
+    <main class="container">
+        <!-- 伦理声明 -->
         <div class="ethics-notice">
-            <p><strong>⚖️ 伦理声明：</strong>本项目仅收录投稿者本人拥有或已授权的项目，所有信息已脱敏。"烂尾"是开发者的常态，也是成长的一部分。我们鼓励重启和完成，而不是嘲笑。</p>
+            <p><strong>⚖️ 伦理声明：</strong>本项目旨在以轻松、有趣的方式记录开发者的创作历程，<strong>绝非羞辱或攻击</strong>。仅收录投稿者本人拥有或已授权的项目，所有信息已脱敏。"烂尾"是开发者的常态，也是成长的一部分。我们鼓励重启和完成，而不是嘲笑。</p>
         </div>
 
+        <!-- 提交表单区域 -->
+        <section class="submit-section" id="submit-section">
+            <h2>📝 提交你的烂尾项目</h2>
+            <p class="mb-lg" style="color: var(--color-text-secondary);">分享你的项目故事，等待管理员审核后即可展示。所有提交的信息应已脱敏。</p>
+
+            <form id="submit-form">
+                <div class="form-group">
+                    <label class="form-label">
+                        项目标题 <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="title"
+                        name="title"
+                        required
+                        maxlength="200"
+                        placeholder="例如：超级待办事项 App"
+                    >
+                    <span class="form-hint">简洁明了的项目名称</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        项目所有者 <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="owner"
+                        name="owner"
+                        required
+                        maxlength="100"
+                        placeholder="你的名字或团队名"
+                    >
+                    <span class="form-hint">请使用脱敏后的名称</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        仓库链接 <span class="required">*</span>
+                    </label>
+                    <input
+                        type="url"
+                        class="form-input"
+                        id="repo_url"
+                        name="repo_url"
+                        required
+                        placeholder="https://github.com/yourname/project"
+                    >
+                    <span class="form-hint">GitHub、GitLab 或其他代码托管平台链接</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        最后提交日期 <span class="required">*</span>
+                    </label>
+                    <input
+                        type="date"
+                        class="form-input"
+                        id="last_commit"
+                        name="last_commit"
+                        required
+                    >
+                    <span class="form-hint">项目最后一次代码提交的日期</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        项目描述 <span class="required">*</span>
+                    </label>
+                    <textarea
+                        class="form-textarea"
+                        id="summary"
+                        name="summary"
+                        required
+                        minlength="10"
+                        maxlength="2000"
+                        placeholder="描述项目的初衷、实现的功能、为什么停止开发等..."
+                    ></textarea>
+                    <span class="form-hint">至少 10 字，最多 2000 字</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        标签（可选）
+                    </label>
+                    <div class="tag-input-wrapper" id="tags-display"></div>
+                    <input
+                        type="text"
+                        class="form-input mt-sm"
+                        id="tag-input"
+                        placeholder="输入标签后按 Enter，例如：web, app, ai"
+                    >
+                    <span class="form-hint">添加 3-5 个标签，帮助分类</span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        ✨ 提交项目
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 主内容区域 -->
         <div class="content-grid">
             <!-- 左侧：项目列表 -->
             <section class="entries-section">
-                <h2>📋 项目列表</h2>
+                <h2>📂 烂尾项目展览</h2>
                 <div id="entries-list" class="entries-list">
-                    <div class="loading">加载中...</div>
+                    <div class="loading">加载中</div>
                 </div>
             </section>
 
             <!-- 右侧：排行榜 -->
             <aside class="leaderboard-section">
                 <h2>🏆 烂尾排行榜</h2>
-                <p class="leaderboard-desc">按烂尾指数降序排列</p>
+                <p class="leaderboard-desc">按烂尾指数降序排列，分数越高越"烂"</p>
                 <div id="leaderboard" class="leaderboard">
-                    <div class="loading">加载中...</div>
+                    <div class="loading">加载中</div>
                 </div>
             </aside>
         </div>
@@ -45,11 +153,12 @@
                 <strong>神奇海螺说：</strong>烂尾不可怕，可怕的是不敢开始。
             </p>
             <p>
-                <a href="https://github.com/xiaolian/magic_conch" target="_blank" rel="noopener">📖 开源地址</a> |
-                <a href="https://github.com/xiaolian/magic_conch/blob/main/README.md" target="_blank" rel="noopener">📝 如何投稿</a>
+                <a href="https://github.com/xlryan/magic-conch" target="_blank" rel="noopener">📖 开源地址</a> |
+                <a href="https://github.com/xlryan/magic-conch/blob/main/README.md" target="_blank" rel="noopener">📝 如何投稿</a> |
+                <a href="/admin">🔐 管理后台</a>
             </p>
             <p class="footer-note">
-                MIT License · 评分模型：群众投票(0-60分) + 停更时间(0-40分)
+                评分模型：群众投票(0-60分) + 停更时间(0-40分) = 烂尾指数(0-100分)
             </p>
         </div>
     </footer>

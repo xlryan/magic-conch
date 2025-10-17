@@ -1,4 +1,22 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: magic_conch_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-graveyard}
+      MYSQL_USER: ${MYSQL_USER:-graveyard_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-graveyard_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
   app:
     build:
       context: .
@@ -11,7 +29,13 @@ services:
       - ./data:/app/data
     env_file:
       - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
     command: >
       sh -c "python scripts/import_entries.py &&
              uvicorn server.app:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  mysql_data:

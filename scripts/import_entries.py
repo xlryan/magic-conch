@@ -11,20 +11,22 @@ import yaml
 # 添加 server 模块到路径
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from server.models import get_engine, create_tables, get_session_factory, Entry
+from server.models import get_engine, create_tables, get_session_factory, Entry, ApprovalStatus
 from server.settings import settings
 
 
 def import_entries():
     """从 YAML 文件导入条目"""
     # 初始化数据库
-    print(f"🗄️  数据库路径: {settings.DB_PATH}")
+    print(f"🗄️  数据库 URL: {settings.DB_URL}")
 
-    # 确保数据库目录存在
-    db_dir = Path(settings.DB_PATH).parent
-    db_dir.mkdir(parents=True, exist_ok=True)
+    # 确保数据库目录存在（仅 SQLite）
+    if settings.DB_URL.startswith("sqlite"):
+        db_path = settings.DB_URL.replace("sqlite:///", "")
+        db_dir = Path(db_path).parent
+        db_dir.mkdir(parents=True, exist_ok=True)
 
-    engine = get_engine(settings.DB_PATH)
+    engine = get_engine(settings.DB_URL)
     create_tables(engine)
     SessionLocal = get_session_factory(engine)
     db = SessionLocal()
@@ -89,10 +91,13 @@ def import_entries():
                 entry.last_commit = last_commit
                 entry.summary = data['summary']
                 entry.tags = tags_str
+                # YAML 导入自动批准
+                if entry.status == ApprovalStatus.PENDING:
+                    entry.status = ApprovalStatus.APPROVED
                 count_updated += 1
                 print(f"🔄 更新: {data['id']}")
             else:
-                # 创建新条目
+                # 创建新条目（YAML 导入自动批准）
                 entry = Entry(
                     id=data['id'],
                     title=data['title'],
@@ -100,7 +105,8 @@ def import_entries():
                     repo_url=data['repo_url'],
                     last_commit=last_commit,
                     summary=data['summary'],
-                    tags=tags_str
+                    tags=tags_str,
+                    status=ApprovalStatus.APPROVED
                 )
                 db.add(entry)
                 count_new += 1

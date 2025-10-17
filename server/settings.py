@@ -14,8 +14,8 @@ class Settings(BaseSettings):
     # CORS 配置
     ALLOWED_ORIGINS: str = "*"
 
-    # 数据库配置
-    DB_PATH: str = "/app/storage/app.db"
+    # 数据库配置（支持 SQLite 和 MySQL）
+    DB_URL: str = "sqlite:///./storage/app.db"
 
     # 可选：hCaptcha 配置
     HCAPTCHA_SECRET: str = ""
