@@ -39,9 +39,33 @@ bash deploy.sh
 
 详细部署文档：[DEPLOY.md](./DEPLOY.md)
 
-### 生产环境更新
+### GitHub Webhook 自动部署（推荐）
 
-当需要更新生产环境时，在服务器上执行：
+通过 Webhook 实现安全的自动部署，适合开源项目：
+
+```bash
+# 1. 在服务器配置 Webhook Secret
+echo "WEBHOOK_SECRET=$(openssl rand -hex 32)" >> .env
+
+# 2. 在 GitHub 仓库配置 Webhook
+# Settings → Webhooks → Add webhook
+# Payload URL: http://your-server:8000/api/webhook/deploy
+# Secret: 与上面生成的 WEBHOOK_SECRET 一致
+
+# 3. 配置 sudo 权限（一次性）
+sudo visudo  # 添加 systemctl 权限配置
+```
+
+**详细配置指南**：[WEBHOOK_SETUP.md](./WEBHOOK_SETUP.md)
+
+**优势**：
+- ✅ 开源安全：不会暴露服务器 SSH 信息
+- ✅ 自动触发：push 到 main 分支自动部署
+- ✅ 简单高效：无需复杂的 CI/CD 配置
+
+### 手动更新
+
+如果不使用 Webhook，也可以手动更新：
 
 ```bash
 cd ~/magic-conch
@@ -50,8 +74,6 @@ pip install -r server/requirements.txt
 python scripts/init_db.py
 sudo systemctl restart magic-conch
 ```
-
-> **⚠️ 开源项目安全提示**：不建议在公开仓库中配置 GitHub Actions 自动部署，这会暴露服务器信息。推荐使用私有仓库或手动部署。
 
 ### 访问应用
 

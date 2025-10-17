@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     # 安全配置
     SECRET_KEY: str = "please-change-me-to-a-random-string"
     ADMIN_TOKEN: str = "your-admin-token-here"
+    WEBHOOK_SECRET: str = ""  # GitHub Webhook Secret
 
     # CORS 配置
     ALLOWED_ORIGINS: str = "*"

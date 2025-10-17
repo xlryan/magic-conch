@@ -2,7 +2,9 @@
 FastAPI 主应用
 """
 import hashlib
+import hmac
 import re
+import subprocess
 from datetime import date, datetime
 from pathlib import Path
 from typing import List
@@ -466,6 +468,114 @@ async def reload_entries(
     db.commit()
 
     return {"ok": True, "data": {"count": count}}
+
+
+def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
+    """
+    验证 GitHub Webhook 签名
+
+    Args:
+        payload_body: 原始请求体
+        signature_header: X-Hub-Signature-256 头部值
+
+    Returns:
+        签名是否有效
+    """
+    if not settings.WEBHOOK_SECRET:
+        # 如果未配置 secret，则跳过验证（不安全，仅用于测试）
+        return True
+
+    if not signature_header:
+        return False
+
+    # GitHub 使用 sha256=<hash> 格式
+    hash_algorithm, signature = signature_header.split('=')
+    if hash_algorithm != 'sha256':
+        return False
+
+    # 计算 HMAC
+    mac = hmac.new(
+        settings.WEBHOOK_SECRET.encode(),
+        msg=payload_body,
+        digestmod=hashlib.sha256
+    )
+    expected_signature = mac.hexdigest()
+
+    # 使用 constant time 比较防止时序攻击
+    return hmac.compare_digest(expected_signature, signature)
+
+
+@app.post("/api/webhook/deploy")
+async def github_webhook(
+    request: Request,
+    x_hub_signature_256: str = Header(None, alias="X-Hub-Signature-256")
+):
+    """
+    GitHub Webhook 端点，用于自动部署
+
+    接收 push 事件并执行部署脚本
+    """
+    # 获取原始请求体
+    payload_body = await request.body()
+
+    # 验证签名
+    if not verify_github_signature(payload_body, x_hub_signature_256):
+        raise HTTPException(status_code=403, detail="Invalid signature")
+
+    # 解析 JSON
+    import json
+    try:
+        payload = json.loads(payload_body)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+    # 检查是否是 push 到 main 分支
+    ref = payload.get('ref', '')
+    if ref != 'refs/heads/main':
+        return {
+            "ok": True,
+            "message": f"Ignored: not main branch (ref={ref})"
+        }
+
+    # 执行部署脚本
+    deploy_script = Path(__file__).parent.parent / "scripts" / "deploy.sh"
+
+    if not deploy_script.exists():
+        return {
+            "ok": False,
+            "error": "Deploy script not found"
+        }
+
+    try:
+        # 异步执行部署脚本
+        result = subprocess.run(
+            ["bash", str(deploy_script)],
+            capture_output=True,
+            text=True,
+            timeout=300  # 5分钟超时
+        )
+
+        return {
+            "ok": True,
+            "data": {
+                "ref": ref,
+                "commit": payload.get('after', '')[:7],
+                "message": payload.get('head_commit', {}).get('message', ''),
+                "deploy_output": result.stdout,
+                "deploy_stderr": result.stderr,
+                "return_code": result.returncode
+            }
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "ok": False,
+            "error": "Deployment timeout (>5 minutes)"
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "error": str(e)
+        }
 
 
 # ==================== 静态文件服务 ====================
