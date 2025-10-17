@@ -112,8 +112,8 @@ curl -X POST http://localhost:8000/api/reload \
 ### 不使用 Docker
 
 ```bash
-# 1. 安装依赖
-pip install -r server/requirements.txt
+# 1. 安装依赖（使用清华镜像加速）
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r server/requirements.txt
 
 # 2. 配置环境变量
 cp .env.example .env
@@ -128,6 +128,11 @@ python scripts/import_entries.py
 # 5. 启动服务
 uvicorn server.app:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+> **提示**：国内用户推荐配置 pip 镜像源以加速下载：
+> ```bash
+> pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+> ```
 
 ## 📡 API 接口
 
