@@ -9,10 +9,50 @@ let userTags = [];
 
 // ==================== 初始化 ====================
 document.addEventListener('DOMContentLoaded', () => {
+    initModal();
     initTagInput();
     initSubmitForm();
     loadEntries();
 });
+
+// ==================== 模态框控制 ====================
+function initModal() {
+    const modal = document.getElementById('submit-modal');
+    const openBtn = document.getElementById('open-submit-modal');
+    const closeBtn = document.getElementById('close-submit-modal');
+
+    // 打开模态框
+    openBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // 禁止背景滚动
+        // 聚焦到第一个输入框
+        setTimeout(() => {
+            document.getElementById('title').focus();
+        }, 100);
+    });
+
+    // 关闭模态框
+    const closeModal = () => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // 恢复滚动
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // 点击遮罩层关闭
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // ESC 键关闭
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+}
 
 // ==================== 标签输入功能 ====================
 function initTagInput() {
@@ -97,8 +137,9 @@ async function submitEntry() {
             document.getElementById('submit-form').reset();
             userTags = [];
             renderTags();
-            // 滚动到顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 关闭模态框
+            document.getElementById('submit-modal').classList.add('hidden');
+            document.body.style.overflow = '';
         } else {
             showToast(result.error || '提交失败，请稍后重试', 'error');
         }
@@ -401,10 +442,12 @@ function escapeHtml(text) {
 
 // ==================== 键盘快捷键 ====================
 document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + K: 聚焦到提交表单
+    // Ctrl/Cmd + K: 打开提交模态框
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        document.getElementById('title').focus();
-        document.getElementById('submit-section').scrollIntoView({ behavior: 'smooth' });
+        const modal = document.getElementById('submit-modal');
+        if (modal.classList.contains('hidden')) {
+            document.getElementById('open-submit-modal').click();
+        }
     }
 });

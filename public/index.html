@@ -21,12 +21,24 @@
             <p><strong>⚖️ 伦理声明：</strong>本项目旨在以轻松、有趣的方式记录开发者的创作历程，<strong>绝非羞辱或攻击</strong>。仅收录投稿者本人拥有或已授权的项目，所有信息已脱敏。"烂尾"是开发者的常态，也是成长的一部分。我们鼓励重启和完成，而不是嘲笑。</p>
         </div>
 
-        <!-- 提交表单区域 -->
-        <section class="submit-section" id="submit-section">
-            <h2>📝 提交你的烂尾项目</h2>
-            <p class="mb-lg" style="color: var(--color-text-secondary);">分享你的项目故事，等待管理员审核后即可展示。所有提交的信息应已脱敏。</p>
+        <!-- 提交按钮区域 -->
+        <div class="submit-trigger">
+            <button class="btn btn-primary btn-large" id="open-submit-modal">
+                ✨ 提交你的烂尾项目
+            </button>
+        </div>
 
-            <form id="submit-form">
+        <!-- 提交表单模态框 -->
+        <div class="modal-overlay hidden" id="submit-modal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📝 提交项目</h2>
+                    <button class="modal-close" id="close-submit-modal" aria-label="关闭">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-lg" style="color: var(--color-text-secondary);">分享你的项目故事，等待管理员审核后即可展示。所有提交的信息应已脱敏。</p>
+
+                    <form id="submit-form">
                 <div class="form-group">
                     <label class="form-label">
                         项目标题 <span class="required">*</span>
@@ -118,13 +130,15 @@
                     <span class="form-hint">添加 3-5 个标签，帮助分类</span>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" id="submit-btn">
-                        ✨ 提交项目
-                    </button>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 100%;">
+                                ✨ 提交项目
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </section>
+            </div>
+        </div>
 
         <!-- 主内容区域 -->
         <div class="content-grid">
