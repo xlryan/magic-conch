@@ -3,7 +3,8 @@
 ## ✨ 新增功能总览
 
 ### 1. 数据库升级
-- ✅ **MySQL 支持**：同时支持 SQLite 和 MySQL
+- ✅ **PostgreSQL 支持**：同时支持 SQLite 和 PostgreSQL
+- ✅ **数据库初始化**：新增 `init_db.py` 自动创建表结构
 - ✅ **新增表结构**：
   - `likes` - 点赞记录表
   - `entries` 新增审核相关字段（status, submitted_at, reviewed_at, review_note）
@@ -107,7 +108,7 @@ cp .env.example .env
 # 编辑 .env 文件，设置以下变量：
 # - SECRET_KEY（必须）
 # - ADMIN_TOKEN（必须）
-# - DB_URL（MySQL 或 SQLite）
+# - DB_URL（PostgreSQL 或 SQLite）
 ```
 
 2. **启动服务**
@@ -115,7 +116,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-MySQL 会自动启动，数据持久化到 `mysql_data` 卷。
+PostgreSQL 会自动启动，数据持久化到 `postgres_data` 卷。数据库表会在应用启动时自动初始化。
 
 ### 方式二：本地开发
 
@@ -131,12 +132,17 @@ cp .env.example .env
 # DB_URL=sqlite:///./storage/app.db
 ```
 
-3. **导入数据**
+3. **初始化数据库**
+```bash
+python scripts/init_db.py
+```
+
+4. **导入数据**
 ```bash
 python scripts/import_entries.py
 ```
 
-4. **启动服务**
+5. **启动服务**
 ```bash
 uvicorn server.app:app --reload
 ```
@@ -153,13 +159,12 @@ ADMIN_TOKEN=your-admin-token-here
 # 数据库配置
 # 选择一种：
 DB_URL=sqlite:///./storage/app.db  # SQLite
-DB_URL=mysql+pymysql://user:pass@mysql:3306/graveyard  # MySQL
+DB_URL=postgresql+psycopg2://user:pass@postgres:5432/graveyard  # PostgreSQL
 
-# MySQL 配置（仅 Docker Compose）
-MYSQL_ROOT_PASSWORD=rootpassword
-MYSQL_DATABASE=graveyard
-MYSQL_USER=graveyard_user
-MYSQL_PASSWORD=graveyard_pass
+# PostgreSQL 配置（仅 Docker Compose）
+POSTGRES_DB=graveyard
+POSTGRES_USER=graveyard_user
+POSTGRES_PASSWORD=graveyard_pass
 
 # 可选
 ALLOWED_ORIGINS=*
@@ -279,18 +284,19 @@ HCAPTCHA_SITEKEY=
 
 ### 新增文件
 - `public/admin.html` - 管理员审核页面
+- `scripts/init_db.py` - 数据库初始化脚本
 - `UPGRADE_V2.md` - 本文档
 
 ### 重要修改
 - `server/app.py` - 完全重写（新增 submit, like, admin 接口）
-- `server/models.py` - 新增 Like 表，Entry 表增加审核字段
+- `server/models.py` - 新增 Like 表，Entry 表增加审核字段，优化 PostgreSQL ENUM 支持
 - `server/schema.py` - 新增多个 Pydantic 模型
 - `public/index.html` - 添加提交表单
 - `public/main.js` - 完全重写，新增提交、点赞功能
 - `public/styles.css` - 完全重写，新设计系统
-- `docker-compose.yml` - 添加 MySQL 服务
-- `.env.example` - 新增 MySQL 配置
-- `server/requirements.txt` - 新增依赖
+- `docker-compose.yml` - 改用 PostgreSQL 服务
+- `.env.example` - 改用 PostgreSQL 配置
+- `server/requirements.txt` - 使用 psycopg2-binary 替代 pymysql
 
 ---
 

@@ -59,7 +59,7 @@ curl -X POST http://localhost:8000/api/reload \
 
 ## 🛠️ 技术栈
 
-- **后端**：Python 3.11 + FastAPI + SQLite + SQLAlchemy
+- **后端**：Python 3.11 + FastAPI + PostgreSQL/SQLite + SQLAlchemy
 - **前端**：原生 HTML + CSS + JavaScript (无框架)
 - **容器化**：Docker + Docker Compose
 - **极简原则**：最少依赖，最大可维护性
@@ -113,16 +113,19 @@ curl -X POST http://localhost:8000/api/reload \
 
 ```bash
 # 1. 安装依赖
-cd server
-pip install -r requirements.txt
+pip install -r server/requirements.txt
 
 # 2. 配置环境变量
 cp .env.example .env
+# 使用 SQLite: DB_URL=sqlite:///./storage/app.db
 
-# 3. 导入数据
+# 3. 初始化数据库
+python scripts/init_db.py
+
+# 4. 导入数据
 python scripts/import_entries.py
 
-# 4. 启动服务
+# 5. 启动服务
 uvicorn server.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 

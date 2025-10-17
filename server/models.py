@@ -30,7 +30,8 @@ class Entry(Base):
     tags = Column(String(200), nullable=True)  # 逗号分隔的标签
 
     # 审核相关
-    status = Column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING, nullable=False)
+    status = Column(Enum(ApprovalStatus, name='approval_status', create_constraint=True, native_enum=True),
+                    default=ApprovalStatus.PENDING, nullable=False)
     submitted_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     reviewed_at = Column(DateTime, nullable=True)
     review_note = Column(Text, nullable=True)  # 审核备注

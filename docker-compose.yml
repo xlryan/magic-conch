@@ -1,20 +1,20 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: magic_conch_mysql
+  postgres:
+    image: postgres:16-alpine
+    container_name: magic_conch_postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-graveyard}
-      MYSQL_USER: ${MYSQL_USER:-graveyard_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-graveyard_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-graveyard}
+      POSTGRES_USER: ${POSTGRES_USER:-graveyard_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-graveyard_pass}
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-graveyard_user} -d ${POSTGRES_DB:-graveyard}"]
+      interval: 5s
+      timeout: 5s
       retries: 10
 
   app:
@@ -30,12 +30,13 @@ services:
     env_file:
       - .env
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     restart: unless-stopped
     command: >
-      sh -c "python scripts/import_entries.py &&
+      sh -c "python scripts/init_db.py &&
+             python scripts/import_entries.py &&
              uvicorn server.app:app --host 0.0.0.0 --port 8000"
 
 volumes:
-  mysql_data:
+  postgres_data:
