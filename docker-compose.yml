@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: magic_conch_graveyard
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped
+    command: >
+      sh -c "python scripts/import_entries.py &&
+             uvicorn server.app:app --host 0.0.0.0 --port 8000"

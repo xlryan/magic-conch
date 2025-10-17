@@ -1,0 +1,7 @@
+id: quaver
+title: Quaver 音乐助手（样例）
+owner: Will
+repo_url: https://example.com/quaver
+last_commit: 2024-08-31
+summary: 包含节拍器、调音器、视唱练耳、鼓机、钢琴模拟器、和弦大全、音阶大全、五度圈、练习统计与课程等。原本计划成为音乐学习的全能工具，但在功能扩展过程中陷入了技术债务和需求反复的泥潭。
+tags: [music, edu, app]

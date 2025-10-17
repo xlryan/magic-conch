@@ -1,0 +1,7 @@
+id: datalens
+title: DataLens 轻量数据中台（样例）
+owner: Will
+repo_url: https://example.com/datalens
+last_commit: 2024-07-10
+summary: 数据资产、数据质量、数据标准、元数据管理等基础能力的轻量实现。设想是打造一个开箱即用的数据治理平台，但在架构设计阶段就过度设计，导致迟迟无法推进到可用的 MVP 版本。
+tags: [data, platform, metadata]
