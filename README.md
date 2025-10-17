@@ -19,22 +19,30 @@
 
 ## 🚀 快速部署
 
-### 1. 配置环境变量
+### Docker Compose（推荐）
 
 ```bash
 cp .env.example .env
 # 编辑 .env 文件，设置你的 SECRET_KEY 和 ADMIN_TOKEN
-```
-
-### 2. 启动服务
-
-```bash
 docker compose up -d
 ```
 
-### 3. 访问应用
+### 服务器一键部署
 
-打开浏览器访问 `http://localhost:8000`
+适用于 Ubuntu 服务器（2核8G + Conda 环境）：
+
+```bash
+git clone https://github.com/xlryan/magic-conch.git
+cd magic-conch
+bash deploy.sh
+```
+
+详细部署文档：[DEPLOY.md](./DEPLOY.md)
+
+### 访问应用
+
+- 主页：`http://localhost:8000`
+- 管理后台：`http://localhost:8000/admin`
 
 ## 📝 添加新条目
 
