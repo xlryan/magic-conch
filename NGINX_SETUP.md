@@ -50,14 +50,20 @@ sudo nginx -t
 
 ### 3️⃣ 配置 SSL 证书（Let's Encrypt 免费证书）
 
-**Let's Encrypt 说明**：
-- ✅ 完全免费，个人可直接申请
-- ✅ 自动续期，无需手动操作
-- ✅ 3个月有效期，自动续期
-- ✅ 浏览器信任，与付费证书安全性相同
+**Let's Encrypt 工作原理**：
+- 🔧 **ACME 协议**：通过自动化 API 颁发证书
+- 🤖 **ACME 客户端**：Certbot 是官方推荐的客户端软件
+- ✅ **完全自动化**：申请、安装、续期全自动
+- ✅ **个人可用**：不需要托管商，自己运行 Certbot 即可
+
+**Certbot（ACME 客户端）说明**：
+- ✅ Let's Encrypt 官方推荐客户端
+- ✅ 完全免费开源
+- ✅ 自动续期（90天证书，提前30天自动续期）
+- ✅ 浏览器信任，与商业证书安全性相同
 
 ```bash
-# 安装 Certbot（Let's Encrypt 官方客户端）
+# 安装 Certbot（ACME 客户端）
 sudo apt install certbot python3-certbot-nginx -y
 
 # 一键获取并配置 SSL 证书
@@ -73,17 +79,27 @@ sudo certbot --nginx -d conch.lesstk.com
 sudo certbot renew --dry-run
 ```
 
-**自动续期已配置**：Certbot 会自动添加 cron 任务，每天检查并自动续期。
+**自动续期机制**：
 
-查看自动续期配置：
+Certbot 安装时会自动配置续期任务，无需手动操作：
 
 ```bash
-# 查看 systemd timer
+# 查看自动续期定时任务
 sudo systemctl list-timers | grep certbot
 
-# 或查看 cron 任务
+# 或查看 cron 配置
 sudo cat /etc/cron.d/certbot
+
+# 手动测试续期（模拟，不会真的续期）
+sudo certbot renew --dry-run
 ```
+
+**续期流程**：
+1. 系统每天自动运行 `certbot renew`
+2. Certbot 检查证书是否在 30 天内过期
+3. 如果需要续期，自动通过 ACME 协议获取新证书
+4. 自动重新加载 Nginx 配置
+5. 无需任何人工干预！
 
 ### 4️⃣ 重启 Nginx
 
@@ -474,9 +490,32 @@ sudo ufw allow 'Nginx Full'
 
 ## ❓ 常见问题
 
-### Q1: Let's Encrypt 是否免费？个人能用吗？
+### Q1: Let's Encrypt 是否免费？个人能用吗？需要托管商吗？
 
-**A**: 完全免费！Let's Encrypt 是非营利组织，任何人都可以免费申请：
+**A**: 完全免费，个人可直接使用，**不需要托管商**！
+
+**关键概念**：
+- 🏛️ **Let's Encrypt**：非营利证书颁发机构（CA）
+- 🔧 **ACME 协议**：自动化证书管理协议
+- 🤖 **Certbot**：ACME 客户端软件（你自己运行）
+
+**你在官网看到的两个选择**：
+
+1️⃣ **托管商代劳**（Hosting Provider）
+   - 一些云服务商（AWS、阿里云等）提供一键申请
+   - 优点：更简单
+   - 缺点：可能收费、功能受限
+
+2️⃣ **自己运行 ACME 客户端**（推荐！）
+   - 使用 Certbot 自己申请和管理
+   - ✅ 完全免费
+   - ✅ 完全控制
+   - ✅ 自动续期
+   - ✅ 适合个人服务器
+
+**你应该选择第 2 种**：自己运行 Certbot，不需要托管商！
+
+特点：
 - ✅ 无需付费
 - ✅ 无需通过服务商
 - ✅ 个人、企业均可使用
@@ -484,6 +523,7 @@ sudo ufw allow 'Nginx Full'
 - ✅ 所有主流浏览器信任
 
 官方网站：<https://letsencrypt.org/>
+Certbot 官网：<https://certbot.eff.org/>
 
 ### Q2: 证书会过期吗？
 
