@@ -1,5 +1,6 @@
 # Environment
 .env
+.admin_token
 
 # Python
 __pycache__/
