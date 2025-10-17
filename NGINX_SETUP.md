@@ -48,22 +48,41 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo nginx -t
 ```
 
-### 3️⃣ 配置 SSL 证书（Let's Encrypt）
+### 3️⃣ 配置 SSL 证书（Let's Encrypt 免费证书）
+
+**Let's Encrypt 说明**：
+- ✅ 完全免费，个人可直接申请
+- ✅ 自动续期，无需手动操作
+- ✅ 3个月有效期，自动续期
+- ✅ 浏览器信任，与付费证书安全性相同
 
 ```bash
-# 安装 Certbot
+# 安装 Certbot（Let's Encrypt 官方客户端）
 sudo apt install certbot python3-certbot-nginx -y
 
-# 获取 SSL 证书
+# 一键获取并配置 SSL 证书
 sudo certbot --nginx -d conch.lesstk.com
 
 # 按提示操作：
-# 1. 输入邮箱
-# 2. 同意服务条款
-# 3. 选择是否重定向 HTTP 到 HTTPS（推荐选择 2）
+# 1. 输入邮箱（用于证书过期提醒）
+# 2. 同意服务条款（输入 Y）
+# 3. 是否接收 EFF 邮件（可选，输入 N）
+# 4. 选择是否重定向 HTTP 到 HTTPS（输入 2，推荐）
 
-# 测试自动续期
+# 测试自动续期（重要！）
 sudo certbot renew --dry-run
+```
+
+**自动续期已配置**：Certbot 会自动添加 cron 任务，每天检查并自动续期。
+
+查看自动续期配置：
+
+```bash
+# 查看 systemd timer
+sudo systemctl list-timers | grep certbot
+
+# 或查看 cron 任务
+sudo cat /etc/cron.d/certbot
 ```
 
 ### 4️⃣ 重启 Nginx
@@ -453,10 +472,142 @@ sudo ufw allow 'Nginx Full'
 
 ---
 
+## ❓ 常见问题
+
+### Q1: Let's Encrypt 是否免费？个人能用吗？
+
+**A**: 完全免费！Let's Encrypt 是非营利组织，任何人都可以免费申请：
+- ✅ 无需付费
+- ✅ 无需通过服务商
+- ✅ 个人、企业均可使用
+- ✅ 与商业证书安全性相同
+- ✅ 所有主流浏览器信任
+
+官方网站：<https://letsencrypt.org/>
+
+### Q2: 证书会过期吗？
+
+**A**: 会过期，但会自动续期：
+- 有效期：90 天
+- 自动续期：Certbot 自动配置 cron/systemd timer
+- 提前续期：到期前 30 天自动续期
+- 无需手动操作
+
+验证自动续期：
+
+```bash
+sudo certbot renew --dry-run
+```
+
+### Q3: 如果域名还没有 SSL，能先用 HTTP 测试吗？
+
+**A**: 可以！先用 HTTP 配置测试：
+
+1. 临时使用 HTTP 版本配置：
+
+```nginx
+server {
+    listen 80;
+    server_name conch.lesstk.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+2. 测试通过后再添加 SSL：
+
+```bash
+sudo certbot --nginx -d conch.lesstk.com
+```
+
+### Q4: 没有域名可以用吗？
+
+**A**: Let's Encrypt 不支持 IP 地址证书，必须有域名。
+
+**免费域名方案**：
+- [Freenom](https://www.freenom.com/) - 免费域名（.tk, .ml, .ga 等）
+- [DuckDNS](https://www.duckdns.org/) - 免费动态 DNS
+- [No-IP](https://www.noip.com/) - 免费 DDNS 服务
+
+或使用 **自签名证书**（仅测试用）：
+
+```bash
+# 生成自签名证书（浏览器会警告）
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/ssl/private/nginx-selfsigned.key \
+  -out /etc/ssl/certs/nginx-selfsigned.crt
+```
+
+### Q5: Certbot 命令失败怎么办？
+
+**常见原因**：
+
+1. **端口 80/443 未开放**
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+```
+
+2. **域名未解析**
+
+```bash
+# 检查域名解析
+nslookup conch.lesstk.com
+dig conch.lesstk.com
+
+# 必须指向你的服务器 IP
+```
+
+3. **Nginx 未运行**
+
+```bash
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+
+4. **使用 standalone 模式**（临时停止 Nginx）
+
+```bash
+sudo systemctl stop nginx
+sudo certbot certonly --standalone -d conch.lesstk.com
+sudo systemctl start nginx
+```
+
+### Q6: 多个域名怎么配置？
+
+```bash
+# 单个证书支持多个域名
+sudo certbot --nginx -d conch.lesstk.com -d www.conch.lesstk.com
+
+# 或分别申请
+sudo certbot --nginx -d conch.lesstk.com
+sudo certbot --nginx -d api.conch.lesstk.com
+```
+
+### Q7: 如何更换域名或重新申请证书？
+
+```bash
+# 1. 删除旧证书
+sudo certbot delete --cert-name conch.lesstk.com
+
+# 2. 申请新证书
+sudo certbot --nginx -d new-domain.com
+
+# 3. 更新 Nginx 配置中的域名
+sudo nano /etc/nginx/sites-available/magic-conch
+```
+
+---
+
 ## 📞 获取帮助
 
 - Nginx 官方文档: <https://nginx.org/en/docs/>
 - Let's Encrypt 文档: <https://letsencrypt.org/docs/>
+- Certbot 使用指南: <https://certbot.eff.org/>
 - 项目 Issues: <https://github.com/xlryan/magic-conch/issues>
 
 ---
