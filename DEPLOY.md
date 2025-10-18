@@ -261,12 +261,43 @@ sudo systemctl reload nginx
 
 ### 4. 配置 HTTPS（推荐）
 
+#### 方式 A：一键配置（推荐）
+
+使用自动化脚本配置多域名 SSL 证书和自动续期：
+
+```bash
+# 运行 SSL 配置脚本
+bash scripts/setup_ssl.sh
+```
+
+脚本会自动完成：
+- ✅ 检查并安装 Certbot
+- ✅ 验证域名 DNS 解析
+- ✅ 为所有域名申请 SSL 证书（jam.lesstk.com, lesstk.com, dev.lesstk.com, conch.lesstk.com）
+- ✅ 配置自动续期（每天检查两次）
+- ✅ 配置续期后自动重载 Nginx
+- ✅ 生成 Nginx SSL 配置示例
+
+#### 方式 B：手动配置
+
 ```bash
 # 安装 Certbot
 sudo apt install certbot python3-certbot-nginx -y
 
-# 获取证书
+# 获取证书（单个域名）
 sudo certbot --nginx -d your-domain.com
+
+# 获取证书（多个域名）
+sudo certbot --nginx -d domain1.com -d domain2.com -d domain3.com
+
+# 测试自动续期
+sudo certbot renew --dry-run
+
+# 查看证书信息
+sudo certbot certificates
+
+# 查看自动续期定时任务
+sudo systemctl list-timers | grep certbot
 ```
 
 ---
